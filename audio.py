@@ -234,7 +234,7 @@ async def resume(con):
             if paused[con.message.server.id] == False:
                 await bot.send_message(con.message.channel,"**☑ | The audio already playing**")
             if paused[con.message.server.id] ==True:
-             embed=discord.Embed(color=cc)
+                embed=discord.Embed(color=cc)
                 embed.set_author(name="⏪ ⏸ ⏩")
                 await bot.say(embed=embed)
                 servers_songs[con.message.server.id].resume()
