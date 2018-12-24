@@ -4,6 +4,7 @@ import youtube_dl
 from discord.ext import commands
 import os
 
+cc = 0xC72323
 bot = commands.Bot(command_prefix='>')
 bot.remove_command('help')
 from discord import opus
@@ -87,7 +88,9 @@ async def queue_songs(con,clear):
             servers_songs[con.message.server.id]=song
             servers_songs[con.message.server.id].start()
             await bot.delete_message(now_playing[con.message.server.id])
-            msg=await bot.send_message(con.message.channel,"Now playing\n⏪ ⏸ ⏹ ⏩")
+            embed=discord.Embed(color=cc)
+            embed.description="I am playing the next audio."
+            msg=await bot.send_message(con.message.channel,embed=embed)
             now_playing[con.message.server.id]=msg
 
             if len(song_names[con.message.server.id]) >= 1:
@@ -102,11 +105,16 @@ async def after_song(con,clear):
     bot.loop.create_task(queue_songs(con,clear))
     bot.loop.create_task(check_voice(con))
 
-
+@bot.command(pass_context=True)
+async def queue(con):
+    embed=discord.Embed(color=cc)
+    embed.set_author(name="Queue")
+    embed.description="There are {} audios in queue".format(len(songs))
+    await bot.say(embed=embed)
 
 @bot.command(pass_context=True)
 async def play(con,*,url):
-    """PLAY THE GIVEN SONG AND QUEUE IT IF THERE IS CURRENTLY SOGN PLAYING"""
+
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):
         await bot.send_message(con.message.channel, "**You must be in a `server voice channel` to use this command**")
@@ -114,11 +122,15 @@ async def play(con,*,url):
     if check != 'Direct Message with {}'.format(con.message.author.name):
         if bot.is_voice_connected(con.message.server) == False:
             await bot.join_voice_channel(con.message.author.voice.voice_channel)
+            embed=discord.Embed(color=cc)
+            embed.set_author(name="☑ | I just joined on a voice channel.")
+            await bot.say(embed=embed)
 
         if bot.is_voice_connected(con.message.server) == True:
             if player_status[con.message.server.id]==True:
                 song_names[con.message.server.id].append(url)
-                await bot.send_message(con.message.channel, "**Song is now Queued**")
+                await bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(song.title))
+
 
 
                 
@@ -128,7 +140,10 @@ async def play(con,*,url):
                 song=await bot.voice_client_in(con.message.server).create_ytdl_player(song_names[con.message.server.id][0], ytdl_options=opts, after=lambda: bot.loop.create_task(after_song(con,False)))
                 servers_songs[con.message.server.id]=song
                 servers_songs[con.message.server.id].start()
-                msg = await bot.send_message(con.message.channel, "I am now playing\n\n⏪ ⏸ ⏹ ⏩\n\n`{}`".format(servers_songs[con.message.server.id].title))
+                embed=discord.Embed(color=cc)
+                embed.set_author(name="⏪ ⏸ ⏩")
+                embed.description="I am playing `{}`".format(servers_songs[con.message.server.id].title)
+                msg = await bot.send_message(con.message.channel, )
                 now_playing[con.message.server.id]=msg
                 song_names[con.message.server.id].pop(0)
 
@@ -143,7 +158,7 @@ async def skip(con):
 
     if check != 'Direct Message with {}'.format(con.message.author.name):#COMMAND NOT IN DM
         if servers_songs[con.message.server.id]== None or len(song_names[con.message.server.id])==0 or player_status[con.message.server.id]==False:
-            await bot.send_message(con.message.channel,"**No songs in queue to skip**")
+            await bot.send_message(con.message.channel,"**❎ | There are no songs to skip in queue**")
         if servers_songs[con.message.server.id] !=None:
             servers_songs[con.message.server.id].pause()
             bot.loop.create_task(queue_songs(con,False))
@@ -152,7 +167,7 @@ async def skip(con):
 
 @bot.command(pass_context=True)
 async def join(con,channel=None):
-    """JOIN A VOICE CHANNEL THAT THE USR IS IN OR MOVE TO A VOICE CHANNEL IF THE BOT IS ALREADY IN A VOICE CHANNEL"""
+
     check = str(con.message.channel)
 
     if check == 'Direct Message with {}'.format(con.message.author.name):
@@ -163,15 +178,18 @@ async def join(con,channel=None):
 
         if voice_status == False:
             await bot.join_voice_channel(con.message.author.voice.voice_channel)
+            embed=discord.Embed(color=cc)
+            embed.set_author(name="☑ | I just joined on a voice channel.")
+            await bot.say(embed=embed)
 
         if voice_status == True:
-            await bot.send_message(con.message.channel, "**Bot is already connected to a voice channel**")
+            await bot.send_message(con.message.channel, "**☑ | The bot is already connected to a voice channel.**")
 
 
 
 @bot.command(pass_context=True)
 async def leave(con):
-    """LEAVE THE VOICE CHANNEL AND STOP ALL SONGS AND CLEAR QUEUE"""
+
     check=str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):#COMMAND USED IN DM
         await bot.send_message(con.message.channel,"**You must be in a `server voice channel` to use this command**")
@@ -179,9 +197,12 @@ async def leave(con):
     if check != 'Direct Message with {}'.format(con.message.author.name):
         
         if bot.is_voice_connected(con.message.server) == False:
-            await bot.send_message(con.message.channel,"**Bot is not connected to a voice channel**")
+            await bot.send_message(con.message.channel,"**❎ | The bot is not connected to a voice channel**")
 
         if bot.is_voice_connected(con.message.server) == True:
+            embed=discord.Embed(color=cc)
+            embed.set_author(name="☑ | I successfully left on a voice channel.")
+            await bot.say(embed=embed)
             bot.loop.create_task(queue_songs(con,True))
 
 @bot.command(pass_context=True)
@@ -193,8 +214,11 @@ async def pause(con):
     if check != 'Direct Message with {}'.format(con.message.author.name):
         if servers_songs[con.message.server.id]!=None:
             if paused[con.message.server.id] == True:
-                await bot.send_message(con.message.channel,"**Audio already paused**")
+                await bot.send_message(con.message.channel,"**☑ | The audio already paused**")
             if paused[con.message.server.id]==False:
+                embed=discord.Embed(color=cc)
+                embed.set_author(name="⏪ ▶ ⏩")
+                await bot.say(embed=embed)
                 servers_songs[con.message.server.id].pause()
                 paused[con.message.server.id]=True
 
@@ -208,8 +232,11 @@ async def resume(con):
     if check != 'Direct Message with {}'.format(con.message.author.name):
         if servers_songs[con.message.server.id] != None:
             if paused[con.message.server.id] == False:
-                await bot.send_message(con.message.channel,"**Audio already playing**")
+                await bot.send_message(con.message.channel,"**☑ | The audio already playing**")
             if paused[con.message.server.id] ==True:
+             embed=discord.Embed(color=cc)
+                embed.set_author(name="⏪ ⏸ ⏩")
+                await bot.say(embed=embed)
                 servers_songs[con.message.server.id].resume()
                 paused[con.message.server.id]=False
 
