@@ -129,9 +129,9 @@ async def play(con,*,url):
         if bot.is_voice_connected(con.message.server) == True:
             if player_status[con.message.server.id]==True:
                 song_names[con.message.server.id].append(url)
-                await bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(servers_songs[con.message.server.id].title)
+                await bot.send_message(con.message.channel, "☑ | The audio is queued")
 
-        if player_status[con.message.server.id]==False:
+            if player_status[con.message.server.id]==False:
                 player_status[con.message.server.id]=True
                 song_names[con.message.server.id].append(url)
                 song=await bot.voice_client_in(con.message.server).create_ytdl_player(song_names[con.message.server.id][0], ytdl_options=opts, after=lambda: bot.loop.create_task(after_song(con,False)))
