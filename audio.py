@@ -109,7 +109,7 @@ async def after_song(con,clear):
 async def queue(con):
     embed=discord.Embed(color=cc)
     embed.set_author(name="Queue")
-    embed.description="There are {} audios in queue".format(len(songs))
+    embed.description="There are {} audios in queue".format(len(servers_songs))
     await bot.say(embed=embed)
 
 @bot.command(pass_context=True)
@@ -128,12 +128,8 @@ async def play(con,*,url):
 
         if bot.is_voice_connected(con.message.server) == True:
             if player_status[con.message.server.id]==True:
-                song_names[con.message.server.id].append(url)
-                await bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(song.title))
+                song_names[con.message.server.id].append(url)                await bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(url.title))
 
-
-
-                
             if player_status[con.message.server.id]==False:
                 player_status[con.message.server.id]=True
                 song_names[con.message.server.id].append(url)
@@ -143,7 +139,7 @@ async def play(con,*,url):
                 embed=discord.Embed(color=cc)
                 embed.set_author(name="⏪ ⏸ ⏩")
                 embed.description="I am playing `{}`".format(servers_songs[con.message.server.id].title)
-                msg = await bot.send_message(con.message.channel, )
+                msg = await bot.send_message(con.message.channel, embed=embed)
                 now_playing[con.message.server.id]=msg
                 song_names[con.message.server.id].pop(0)
 
