@@ -114,7 +114,7 @@ async def queue(con):
 
 @bot.command(pass_context=True)
 async def play(con,*,url):
-
+    await bot.say(f"<:youtube:519902612976304145> **Searching** `{url}` :mag_right")
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):
         await bot.send_message(con.message.channel, "**You must be in a `server voice channel` to use this command**")
@@ -138,8 +138,7 @@ async def play(con,*,url):
                 servers_songs[con.message.server.id]=song
                 servers_songs[con.message.server.id].start()
                 embed=discord.Embed(color=cc)
-                embed.set_author(name="⏪ ⏸ ⏩")
-                embed.description="I am playing `{}`".format(servers_songs[con.message.server.id].title)
+                embed.description="Playing :notes:`{}` - Now".format(servers_songs[con.message.server.id].title)
                 msg = await bot.send_message(con.message.channel, embed=embed)
                 now_playing[con.message.server.id]=msg
                 song_names[con.message.server.id].pop(0)
