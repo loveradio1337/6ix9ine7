@@ -109,7 +109,7 @@ async def after_song(con,clear):
 async def queue(con):
     embed=discord.Embed(color=cc)
     embed.set_author(name="Queue")
-    embed.description="There are {} audios in queue".format(len(servers_songs))
+    embed.description="There are {} audios in queue".format(len(now_playing))
     await bot.say(embed=embed)
 
 @bot.command(pass_context=True)
@@ -175,7 +175,7 @@ async def join(con,channel=None):
         if voice_status == False:
             await bot.join_voice_channel(con.message.author.voice.voice_channel)
             embed=discord.Embed(color=cc)
-            embed.set_author(name="☑ | I just joined on a voice channel.")
+            embed.description="☑ | I just joined on a voice channel."
             await bot.say(embed=embed)
 
         if voice_status == True:
@@ -197,7 +197,7 @@ async def leave(con):
 
         if bot.is_voice_connected(con.message.server) == True:
             embed=discord.Embed(color=cc)
-            embed.set_author(name="☑ | I successfully left on a voice channel.")
+            embed.description="☑ | I successfully left on a voice channel."
             await bot.say(embed=embed)
             bot.loop.create_task(queue_songs(con,True))
 
@@ -213,7 +213,7 @@ async def pause(con):
                 await bot.send_message(con.message.channel,"**☑ | The audio already paused**")
             if paused[con.message.server.id]==False:
                 embed=discord.Embed(color=cc)
-                embed.set_author(name="⏪ ▶ ⏩")
+                embed.description="**☑ | I successfully pause the audio.**"
                 await bot.say(embed=embed)
                 servers_songs[con.message.server.id].pause()
                 paused[con.message.server.id]=True
@@ -231,7 +231,7 @@ async def resume(con):
                 await bot.send_message(con.message.channel,"**☑ | The audio already playing**")
             if paused[con.message.server.id] ==True:
                 embed=discord.Embed(color=cc)
-                embed.set_author(name="⏪ ⏸ ⏩")
+                embed.description="**☑ | The audio is successfully resumed.**"
                 await bot.say(embed=embed)
                 servers_songs[con.message.server.id].resume()
                 paused[con.message.server.id]=False
