@@ -127,7 +127,7 @@ async def queue(con):
 
 @bot.command(pass_context=True)
 async def play(con,*,url):
-    await bot.say(f"<a:youtube:519902612976304145> **Searching** `{url}` :mag_right")
+    await bot.say(f"<a:YouTube:519902612976304145> **Searching** :mag_right:`{url}`")
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):
         await bot.send_message(con.message.channel, "**You must be in a `server voice channel` to use this command**")
@@ -136,7 +136,7 @@ async def play(con,*,url):
         if bot.is_voice_connected(con.message.server) == False:
             await bot.join_voice_channel(con.message.author.voice.voice_channel)
             embed=discord.Embed(color=cc)
-            embed.set_author(name="☑ | I just joined on a voice channel.")
+            embed.description="**☑ | I just joined on a voice channel.**"
             await bot.say(embed=embed)
 
         if bot.is_voice_connected(con.message.server) == True:
@@ -151,7 +151,7 @@ async def play(con,*,url):
                 servers_songs[con.message.server.id]=song
                 servers_songs[con.message.server.id].start()
                 embed=discord.Embed(color=cc)
-                embed.description="Playing :notes:`{}` - Now".format(servers_songs[con.message.server.id].title)
+                embed.description="Playing :notes: `{}` - Now".format(servers_songs[con.message.server.id].title)
                 msg = await bot.send_message(con.message.channel, embed=embed)
                 now_playing[con.message.server.id]=msg
                 song_names[con.message.server.id].pop(0)
