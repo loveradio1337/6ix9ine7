@@ -53,6 +53,19 @@ async def set_player_status():
 async def bg():
     bot.loop.create_task(set_player_status())
 
+async def checking_voice(ctx):
+    await asyncio.sleep(130)
+    if playing[ctx.message.server.id]== False:
+        try:
+            pos = in_voice.index(ctx.message.server.id)
+            del in_voice[pos]
+            server = ctx.message.server
+            voice_client = bot.voice_client_in(server)
+            await voice_client.disconnect()
+            await bot.say("{} left because there was no audio playing for a while".format(bot.user.name))
+        except:
+            pass
+
 
 @bot.event
 async def on_ready():
@@ -114,7 +127,7 @@ async def queue(con):
 
 @bot.command(pass_context=True)
 async def play(con,*,url):
-    await bot.say(f"<:youtube:519902612976304145> **Searching** `{url}` :mag_right")
+    await bot.say(f"<a:youtube:519902612976304145> **Searching** `{url}` :mag_right")
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):
         await bot.send_message(con.message.channel, "**You must be in a `server voice channel` to use this command**")
