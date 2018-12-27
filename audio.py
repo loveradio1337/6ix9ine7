@@ -40,7 +40,7 @@ opts = {
 
 
 load_opus_lib()
-
+in_voice=[]
 servers_songs={}
 player_status={}
 now_playing={}
@@ -123,7 +123,7 @@ async def queue_songs(con,clear):
 async def after_song(con,clear):
     bot.loop.create_task(queue_songs(con,clear))
     bot.loop.create_task(check_voice(con))
-    bot.loop.create_task(checking_voice())
+    bot.loop.create_task(checking_voice(con))
 
 @bot.command(pass_context=True)
 async def queue(con):
@@ -132,10 +132,9 @@ async def queue(con):
     embed.description="There are {} audios in queue".format(len(now_playing))
     await bot.say(embed=embed)
 
-@bot.command(pass_context=True)
+@bot.command(aliases=["p"],pass_context=True)
 async def play(con,*,url):
     await bot.say(f":mag_right: **Searching** `{url}`")
-    servers_songs[con.message.server.id].volume=float(2000)
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):
         await bot.send_message(con.message.channel, "**You must be in a `server voice channel` to use this command**")
@@ -162,7 +161,7 @@ async def play(con,*,url):
 
 
 
-@bot.command(pass_context=True)
+@bot.command(aliases=["s"],pass_context=True)
 async def skip(con):
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):#COMMAND IS IN DM
@@ -251,5 +250,12 @@ async def resume(con):
                 servers_songs[con.message.server.id].resume()
                 paused[con.message.server.id]=False
 
+@bot.command(aliases=["vol"],pass_context=True)
+async def volume(con, vol:float):
+    volu = float(vol)
+     servers_songs[con.message.server.id].volume=volu
+    embed=discord.Embed(color=cc)
+    embed.description=f"The audio volume is set to **{vol}**"
+    await bot.say(embed=embed)
 
 bot.run(os.environ['BOT_TOKEN'])
