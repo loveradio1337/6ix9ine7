@@ -1,8 +1,15 @@
 import discord
 import asyncio
+import platform
+import colorsys
 import youtube_dl
-from discord.ext import commands
 import os
+import time
+import random
+from discord.ext import commands
+from discord.ext.commands import Bot
+from discord.utils import find
+from discord import Game, Embed, Color, Status, ChannelType
 
 cc = 0xC72323
 bot = commands.Bot(command_prefix='>')
@@ -46,7 +53,7 @@ async def set_player_status():
         servers_songs[i.id]=None
         paused[i.id]=False
         song_names[i.id]=[]
-    print(lets go boy.)
+    print("lets go boy.")
 
 
 
