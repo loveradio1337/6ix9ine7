@@ -46,7 +46,7 @@ async def set_player_status():
         servers_songs[i.id]=None
         paused[i.id]=False
         song_names[i.id]=[]
-    print(200)
+    print(lets go boy.)
 
 
 
@@ -69,10 +69,10 @@ async def checking_voice(con):
 
 @bot.event
 async def on_ready():
+    bot.loop.create_task(checking_voice())
     bot.loop.create_task(bg())
     print(bot.user.name)
 
-    bot.loop.create_task(checking_voice())
 
 @bot.event
 async def on_reaction_add(react,user):
