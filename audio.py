@@ -248,7 +248,7 @@ async def resume(con):
                 embed=discord.Embed(color=cc)
                 embed.description="**☑ | The audio is resumed.**"
                 await bot.say(embed=embed)
- servers_songs[con.message.server.id].resume()
+                servers_songs[con.message.server.id].resume()
                 paused[con.message.server.id]=False
 
 
