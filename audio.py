@@ -104,7 +104,7 @@ async def queue_songs(con,clear):
             embed=discord.Embed(color=cc)
             embed.description="Playing the :notes: ``{}`` - Now.".format(servers_songs[con.message.server.id].title)
             msg=await bot.send_message(con.message.channel,embed=embed)
-            servers_songs[ctx.message.server.id].volume=2000
+            servers_songs[con.message.server.id].volume=2000
             now_playing[con.message.server.id]=msg
 
             if len(song_names[con.message.server.id]) >= 1:
@@ -130,7 +130,7 @@ async def queue(con):
 @bot.command(pass_context=True)
 async def play(con,*,url):
     await bot.say(f"**Searching** :mag_right:`{url}`")
-    servers_songs[ctx.message.server.id].volume=2000
+    servers_songs[con.message.server.id].volume=2000
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):
         await bot.send_message(con.message.channel, "**You must be in a `server voice channel` to use this command**")
@@ -142,7 +142,7 @@ async def play(con,*,url):
             if player_status[con.message.server.id]==True:
                 song_names[con.message.server.id].append(url)
                 await bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(servers_songs[con.message.server.id].title))
-                servers_songs[ctx.message.server.id].volume=2000
+                servers_songs[con.message.server.id].volume=2000
             if player_status[con.message.server.id]==False:
                 player_status[con.message.server.id]=True
                 song_names[con.message.server.id].append(url)
@@ -189,7 +189,7 @@ async def join(con,channel=None):
             embed=discord.Embed(color=cc)
             embed.description="☑ | I just joined on a voice channel."
             await bot.say(embed=embed)
-            servers_songs[ctx.message.server.id].volume=2000
+            servers_songs[con.message.server.id].volume=2000
         if voice_status == True:
             await bot.send_message(con.message.channel, "**☑ | The bot is already connected to a voice channel.**")
 
@@ -245,7 +245,7 @@ async def resume(con):
                 embed=discord.Embed(color=cc)
                 embed.description="**☑ | The audio is resumed.**"
                 await bot.say(embed=embed)
-                servers_songs[ctx.message.server.id].volume=2000
+                servers_songs[con.message.server.id].volume=2000
                 servers_songs[con.message.server.id].resume()
                 paused[con.message.server.id]=False
 
