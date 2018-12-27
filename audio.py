@@ -253,7 +253,7 @@ async def resume(con):
 @bot.command(aliases=["vol"],pass_context=True)
 async def volume(con, vol:float):
     volu = float(vol)
-     servers_songs[con.message.server.id].volume=volu
+    servers_songs[con.message.server.id].volume=volu
     embed=discord.Embed(color=cc)
     embed.description=f"The audio volume is set to **{vol}**"
     await bot.say(embed=embed)
