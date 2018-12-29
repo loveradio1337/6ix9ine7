@@ -60,19 +60,6 @@ async def set_player_status():
 async def bg():
     bot.loop.create_task(set_player_status())
 
-async def checking_voice(con):
-    await asyncio.sleep(5)
-    if playing[con.message.server.id]== False:
-        try:
-            pos = in_voice.index(con.message.server.id)
-            del in_voice[pos]
-            server = con.message.server
-            voice_client = bot.voice_client_in(server)
-            await voice_client.disconnect()
-            await bot.say("I left because there was no audio playing for a while")
-        except:
-            pass
-
 
 @bot.event
 async def on_ready():
@@ -87,8 +74,6 @@ async def on_reaction_add(react,user):
 
 async def check_voice(con):
     pass
-
-
 
 
 async def queue_songs(con,clear):
@@ -123,7 +108,7 @@ async def queue_songs(con,clear):
 async def after_song(con,clear):
     bot.loop.create_task(queue_songs(con,clear))
     bot.loop.create_task(check_voice(con))
-    bot.loop.create_task(checking_voice(con))
+
 
 @bot.command(pass_context=True)
 async def queue(con):
@@ -134,7 +119,8 @@ async def queue(con):
 
 @bot.command(aliases=["p"],pass_context=True)
 async def play(con,*,url):
-    await bot.say(f":mag_right: **Searching** `{url}`")
+    await bot.say(f":mag_right: **Searching** for `{url}`")
+    await asyncio.sleep(2)
     check = str(con.message.channel)
     if check == 'Direct Message with {}'.format(con.message.author.name):
         await bot.send_message(con.message.channel, "**You must be in a `server voice channel` to use this command**")
@@ -145,7 +131,7 @@ async def play(con,*,url):
         if bot.is_voice_connected(con.message.server) == True:
             if player_status[con.message.server.id]==True:
                 song_names[con.message.server.id].append(url)
-                await bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(servers_songs[con.message.server.id].title))
+                await bot.send_message(con.message.channel, "☑ | The audio from ``{url}`` is queued"
             if player_status[con.message.server.id]==False:
                 player_status[con.message.server.id]=True
                 song_names[con.message.server.id].append(url)
@@ -190,7 +176,7 @@ async def join(con,channel=None):
         if voice_status == False:
             await bot.join_voice_channel(con.message.author.voice.voice_channel)
             embed=discord.Embed(color=cc)
-            embed.description="☑ | I just joined on a voice channel."
+            embed.description="☑ | I just joined in the voice channel."
             await bot.say(embed=embed)
         if voice_status == True:
             await bot.send_message(con.message.channel, "**☑ | The bot is already connected to a voice channel.**")
@@ -211,7 +197,7 @@ async def leave(con):
 
         if bot.is_voice_connected(con.message.server) == True:
             embed=discord.Embed(color=cc)
-            embed.description="☑ | I successfully left on a voice channel."
+            embed.description="☑ | I left on the voice channel."
             await bot.say(embed=embed)
             bot.loop.create_task(queue_songs(con,True))
 
