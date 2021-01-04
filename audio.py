@@ -125,7 +125,7 @@ async def play(con,*,url):
     if bot.is_voice_connected(con.message.server) == True:
         if player_status[con.message.server.id]==True:
             song_names[con.message.server.id].append(url)
-             wait bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(url.title))
+            await bot.send_message(con.message.channel, "☑ | The audio ``{}`` is queued".format(url.title))
         if player_status[con.message.server.id]==False:
             player_status[con.message.server.id]=True
             song_names[con.message.server.id].append(url)
