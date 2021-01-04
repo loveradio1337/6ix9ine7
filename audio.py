@@ -129,7 +129,7 @@ async def play(con,*,url):
         if player_status[con.message.server.id]==False:
             player_status[con.message.server.id]=True
             song_names[con.message.server.id].append(url)
-           song=await bot.voice_client_in(con.message.server).create_ytdl_player(song_names[con.message.server.id][0], ytdl_options=opts, after=lambda: bot.loop.create_task(after_song(con,False)))
+            song=await bot.voice_client_in(con.message.server).create_ytdl_player(song_names[con.message.server.id][0], ytdl_options=opts, after=lambda: bot.loop.create_task(after_song(con,False)))
             servers_songs[con.message.server.id]=song
             servers_songs[con.message.server.id].start()
             embed=discord.Embed(color=cc)
