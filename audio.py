@@ -122,8 +122,6 @@ async def queue(con):
 async def play(con,*,url):
     await bot.say(f":mag_right: **Searching** for `{url}`")
 
-        if bot.is_voice_connected(con.message.server) == False:
-            await bot.join_voice_channel(con.message.author.voice.voice_channel)
         if bot.is_voice_connected(con.message.server) == True:
             if player_status[con.message.server.id]==True:
                 song_names[con.message.server.id].append(url)
